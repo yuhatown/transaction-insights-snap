@@ -129,10 +129,10 @@ const Index = () => {
   return (
     <Container>
       <Heading>
-        Welcome to <Span>template-snap</Span>
+        Welcome to <Span>cupid</Span>
       </Heading>
       <Subtitle>
-        Get started by editing <code>src/index.ts</code>
+        Free gas-fee <code>Metamask Wallet</code>
       </Subtitle>
       <CardContainer>
         {state.error && (
@@ -156,7 +156,7 @@ const Index = () => {
             content={{
               title: 'Connect',
               description:
-                'Get started by connecting to and installing the example snap.',
+                'Get started by connecting to and installing the cupid wallet with Metamask snap.',
               button: (
                 <ConnectButton
                   onClick={handleConnectClick}
@@ -185,7 +185,7 @@ const Index = () => {
         )}
         <Card
           content={{
-            title: 'Send Hello message',
+            title: 'Send Ad Check message',
             description:
               'Display a custom message within a confirmation screen in MetaMask.',
             button: (
@@ -202,14 +202,14 @@ const Index = () => {
             !shouldDisplayReconnectButton(state.installedSnap)
           }
         />
-        <Notice>
+        {/* <Notice>
           <p>
             Please note that the <b>snap.manifest.json</b> and{' '}
             <b>package.json</b> must be located in the server root directory and
             the bundle must be hosted at the location specified by the location
             field.
           </p>
-        </Notice>
+        </Notice> */}
       </CardContainer>
     </Container>
   );

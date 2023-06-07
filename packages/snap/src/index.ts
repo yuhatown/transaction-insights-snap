@@ -1,32 +1,58 @@
-import { OnRpcRequestHandler } from '@metamask/snaps-types';
-import { panel, text } from '@metamask/snaps-ui';
+import { onTransacionHandler, OnRpcRequestHandler } from '@metamask/snaps-types';
+import { heading, panel, text, copyable, divider, spinner } from '@metamask/snaps-ui';
 
-/**
- * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
- *
- * @param args - The request handler args as object.
- * @param args.origin - The origin of the request, e.g., the website that
- * invoked the snap.
- * @param args.request - A validated JSON-RPC request object.
- * @returns The result of `snap_dialog`.
- * @throws If the request method is not valid for this snap.
- */
-export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
+export const onTransaction: onTransacionHandler = async ({ transaction }) => {
+
+  const currentGasPrice = await window.ethereum.request({
+    method: 'eth_gasPrice',
+  });
+
+  const transactionGas = parseInt(transaction.gas as string, 16);
+  const currentGasPriceInWei = parseInt(currentGasPrice ?? '', 16);
+  const maxFeePerGasInWei = parseInt(transaction.maxFeePerGas as string, 16);
+  const maxPriorityFeePerGasInWei = parseInt(
+    transaction.maxPriorityFeePerGas as string,
+    16,
+  );
+
+  const gasFees = Math.min(
+    maxFeePerGasInWei * transactionGas,
+    (currentGasPriceInWei + maxPriorityFeePerGasInWei) * transactionGas,
+  );
+
+  const transactionValueInWei = parseInt(transaction.value as string, 16);
+  const gasFeesPercentage = (gasFees / (gasFees + transactionValueInWei)) * 100;
+
+  return {
+    content: panel([
+      heading('Welcome to Ethcon!'),
+      text(
+        'Ethereum Developer Conference 100% Run by Community Volunteers.',
+        'When: Sep 1st (FRI), 2023 ~ Sep 3rd (SUN), 2023',
+        'Where: @Platz2, Sungsoo, Seoul',
+      ),
+      divider(),
+      copyable('https://ethcon.kr')
+    ]),
+  };
+};
+
+
+export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
   switch (request.method) {
     case 'hello':
-      return snap.request({
+      return await snap.request({
         method: 'snap_dialog',
         params: {
-          type: 'confirmation',
+          type: 'alert',
           content: panel([
-            text(`Hello, **${origin}**!`),
-            text('This custom confirmation is just for display purposes.'),
-            text(
-              'But you can edit the snap source code to make it do something, if you want to!',
-            ),
+            heading(`Welcome to SoulMate`),
+            text('This is Ad platform!'),
+            text('Enjoy your money journey :)'),
           ]),
         },
       });
+
     default:
       throw new Error('Method not found.');
   }
